@@ -28,7 +28,7 @@ create table users(
 create table boards(
     id int primary KEY auto_increment,
     title varchar(150),
-    content lonboardsgtext,
+    content longtext,
     usersId int,
     createdAt TIMESTAMP
 );
@@ -43,4 +43,18 @@ insert into users(username, password, email, createdAt) values('hong', '1234', '
 COMMIT;
 
 SELECT * FROM users;
+```
+
+### 페이징 쿼리
+```sql
+SELECT COUNT(*) totalCount,
+ceil(COUNT(*)/3) totalPage,
+1 currentPage,
+case 
+WHEN  #{page}=0
+then '1' ELSE '0' END first,
+case 
+WHEN  #{page}=ceil(COUNT(*)/3)-1
+then '1' ELSE '0' END last
+FROM boards;
 ```

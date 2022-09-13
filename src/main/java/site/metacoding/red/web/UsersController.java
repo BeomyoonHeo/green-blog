@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.domain.users.UsersDao;
 import site.metacoding.red.service.UsersService;
-import site.metacoding.red.service.dto.users.JoinDto;
-import site.metacoding.red.service.dto.users.LoginDto;
-import site.metacoding.red.service.dto.users.UpdateDto;
+import site.metacoding.red.web.dto.request.users.JoinDto;
+import site.metacoding.red.web.dto.request.users.LoginDto;
+import site.metacoding.red.web.dto.request.users.UpdateDto;
 import site.metacoding.red.utill.Script;
 
 @RequiredArgsConstructor
@@ -37,8 +37,9 @@ public class UsersController {
 	
 	@GetMapping("/loginForm")
 	public String loginForm() { // 쿠키 배워보기
-		return "users/joinForm";
+		return "users/loginForm";
 	}
+	
 	@PostMapping("/join")
 	public String join(JoinDto joinDto) {
 		usersService.회원가입(joinDto); //service에게 (책임)위임한다.
@@ -51,7 +52,7 @@ public class UsersController {
 		Users principal = usersService.로그인(loginDto); //service에게 (책임)위임한다.
 		
 		//historyback을 해서 정보를 남겨놔야함 - UX(편의성)
-		if(principal != null) {
+		if(principal == null) {
 			return Script.back("아이디 혹은 비밀번호가 틀렸습니다.");
 		}
 		session.setAttribute("principal", principal);

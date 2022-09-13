@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.domain.users.UsersDao;
-import site.metacoding.red.service.dto.users.JoinDto;
-import site.metacoding.red.service.dto.users.LoginDto;
-import site.metacoding.red.service.dto.users.UpdateDto;
+import site.metacoding.red.web.dto.request.users.JoinDto;
+import site.metacoding.red.web.dto.request.users.LoginDto;
+import site.metacoding.red.web.dto.request.users.UpdateDto;
 
 
 //Transection 관리할때 사용하는 annotation

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import site.metacoding.red.web.dto.response.users.UpdateDto;
 
 // entity는 setter를 만들지 않음
 @Setter
@@ -15,5 +16,10 @@ public class Boards {
 	private String content;
 	private Integer usersId;
 	private Timestamp createdAt; // At시분초 다 표현할때, Dt 년월일
+	
+	public void updateBoard(UpdateDto updateDto) {
+		this.title = updateDto.getTitle();
+		this.content = updateDto.getContent();
+	}
 
 }
