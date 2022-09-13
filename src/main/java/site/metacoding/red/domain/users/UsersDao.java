@@ -8,6 +8,6 @@ public interface UsersDao {
 	public List<Users> findAll();
 	public void update(Users users);
 	public void deleteById(Integer id);
-	public Users findUsername();
+	public Users findUsername(String username);
 	
 }
