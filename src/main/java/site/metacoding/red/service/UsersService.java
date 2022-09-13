@@ -34,9 +34,7 @@ public class UsersService {
 		usersDao.insert(userInfo);
 	}
 	public Users 로그인(LoginDto loginDto) { // username, password
-		Users UsersPs = usersDao.findUsername(loginDto.getUsername());
-		System.out.println(UsersPs.getPassword());
-		System.out.println(loginDto.getPassword());
+		Users UsersPs = usersDao.findUsername(loginDto.getUsername());;
 		// if로 usersPS의 password와 dto password 비교
 		if(UsersPs.getPassword().equals(loginDto.getPassword()))
 			return UsersPs;
