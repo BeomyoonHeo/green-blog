@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.boards.BoardsDao;
+import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
-import site.metacoding.red.web.dto.response.users.UpdateDto;
+import site.metacoding.red.web.dto.request.boards.UpdateDto;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class BoardsService {
 	public void 게시글삭제하기(Integer id) {
 		boardsDao.deleteById(id);
 	}
-	public void 게시글쓰기(WriteDto writeDto) {
-		boardsDao.insert(writeDto);
+	public void 게시글쓰기(WriteDto writeDto, Users principal) {
+		boardsDao.insert(writeDto.toEntity(principal.getId()));
 	}
 }

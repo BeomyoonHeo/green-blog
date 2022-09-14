@@ -16,7 +16,7 @@ import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.service.BoardsService;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
-import site.metacoding.red.web.dto.response.users.UpdateDto;
+import site.metacoding.red.web.dto.request.boards.UpdateDto;
 
 @RequiredArgsConstructor
 @Controller
@@ -68,8 +68,7 @@ public class BoardsController {
 	@PostMapping("/boards/write")
 	public String write(WriteDto writeDto) {
 		Users users = (Users)session.getAttribute("principal");
-		writeDto.setUsersId(users.getId());
-		boardsService.게시글쓰기(writeDto);
+		boardsService.게시글쓰기(writeDto, users);
 		return "redirect:/boards";
 		
 	}
