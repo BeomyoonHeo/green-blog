@@ -27,7 +27,7 @@ public class UsersService {
 		// 1. dto를 entity로 변경하는 코드
 		Users userInfo = new Users();
 		userInfo.setJoin(joinDto);
-		if(아이디중복확인(userInfo.getUsername())){
+		if(유저네임중복확인(userInfo.getUsername())){
 		System.out.println("회원명 중복 발생");
 		return;}
 		// 2. entity로 DB 수행
@@ -59,7 +59,7 @@ public class UsersService {
 	} // users - delete, boards - update
 	
 	
-	public boolean 아이디중복확인(String username) {
+	public boolean 유저네임중복확인(String username) {
 		Users usersPS = usersDao.findUsername(username);
 		if(usersPS == null)
 			return false;

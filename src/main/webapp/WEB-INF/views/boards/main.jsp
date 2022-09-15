@@ -21,22 +21,26 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="page" items="${pagingDto.mainDtos}">
 			<tr>
-				<td>${page.id}</td>
-				<td><a href="/boards/${page.id}">${page.title}</a></td>
-				<td>${page.username}</td>
-			</tr>
-			</c:forEach>
+				<c:forEach var="page" items="${pagingDto.mainDtos}">
+					<tr>
+						<td>${page.id}</td>
+						<td><a href="/boards/${page.id}">${page.title}</a></td>
+						<td>${page.username}</td>
+					</tr>
+				</c:forEach>
 		</tbody>
 	</table>
 	<div class="d-flex justify-content-center">
 		<ul class="pagination">
-			<li class='page-item ${pagingDto.first?"disabled":""}'><a class="page-link" href="/boards?page=${pagingDto.currentPage - 1}&keyword=${pagingDto.keyword}">Prev</a></li>
+			<li class='page-item ${pagingDto.first?"disabled":""}'><a class="page-link"
+				href="/boards?page=${pagingDto.currentPage - 1}&keyword=${pagingDto.keyword}">Prev</a></li>
 			<c:forEach var="page" begin="${pagingDto.startPageNum}" end="${pagingDto.lastPageNum - 1}">
-			<li class='page-item'><a class='page-link' href="/boards?page=${page-1}&keyword=${pagingDto.keyword}">${page}</a></li>
+				<li class='page-item ${pagingDto.currentPage == page - 1?"active":""}'><a class='page-link'
+					href="/boards?page=${page-1}&keyword=${pagingDto.keyword}">${page}</a></li>
 			</c:forEach>
-			<li class='page-item ${pagingDto.last || pagingDto.notResult?"disabled":""}'><a class="page-link" href="/boards?page=${pagingDto.currentPage + 1}&keyword=${pagingDto.keyword}">Next</a></li>
+			<li class='page-item ${pagingDto.last || pagingDto.notResult?"disabled":""}'><a
+				class="page-link" href="/boards?page=${pagingDto.currentPage + 1}&keyword=${pagingDto.keyword}">Next</a></li>
 		</ul>
 	</div>
 

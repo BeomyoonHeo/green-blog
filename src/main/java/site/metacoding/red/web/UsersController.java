@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.users.Users;
-import site.metacoding.red.domain.users.UsersDao;
 import site.metacoding.red.service.UsersService;
 import site.metacoding.red.web.dto.request.users.JoinDto;
 import site.metacoding.red.web.dto.request.users.LoginDto;
 import site.metacoding.red.web.dto.request.users.UpdateDto;
+import site.metacoding.red.web.dto.response.CMRespDto;
 import site.metacoding.red.utill.Script;
 
 @RequiredArgsConstructor
@@ -29,6 +29,16 @@ public class UsersController {
 
 	private final UsersService usersService;
 	private final HttpSession session;
+	
+	// http://localhost:8000/users/usernameSameCheck?username=ssar
+	@GetMapping("users/usernameSameCheck")
+	public @ResponseBody CMRespDto<Boolean> usernameSameCheck(String username) {
+		boolean isSame = usersService.유저네임중복확인(username);
+		// return은 JSON으로 
+		// HttpMessageConverter발동 - 자동으로 json type으로 변경해준다.
+		// HttpMessageConverter는 Restcontroller나 @ResponseBody의 어노테이션에의해 발동 된다.
+		return new CMRespDto<>(1, "성공", isSame);
+	}
 	
 	@GetMapping("/joinForm")
 	public String joinForm() {
@@ -41,27 +51,31 @@ public class UsersController {
 	}
 	
 	@PostMapping("/join")
-	public String join(JoinDto joinDto) {
+	public @ResponseBody CMRespDto<?> join(@RequestBody JoinDto joinDto) {
 		usersService.회원가입(joinDto); //service에게 (책임)위임한다.
-		return "redirect:/loginForm";
+		return new CMRespDto<>(1, "회원가입성공", null);
 	}
 	
 	@PostMapping("/login")
 	//viewResolver 발동 안함 - @ResponseBody를 붙여줘서 -> data를 return한다.
-	public @ResponseBody String login(LoginDto loginDto) {
+	public @ResponseBody CMRespDto<?> login(@RequestBody LoginDto loginDto) {
 		Users principal = usersService.로그인(loginDto); //service에게 (책임)위임한다.
 		
 		//historyback을 해서 정보를 남겨놔야함 - UX(편의성)
 		if(principal == null) {
-			return Script.back("아이디 혹은 비밀번호가 틀렸습니다.");
+			return new CMRespDto<>(-1, "로그인 실패", null);
 		}
 		session.setAttribute("principal", principal);
-		return Script.href("/");
+		return new CMRespDto<>(1, "로그인 성공", null);
 	}
 	
 	@GetMapping("/users/{id}")
 	public String updateForm(@PathVariable Integer id, Model model) {
-		Users usersPS = usersService.회원정보보기(id);
+		Users usersPS = (Users)session.getAttribute("principal");
+		if(usersPS.getId() != id) {
+			session.invalidate();
+			return "redirect:/";
+		}
 		model.addAttribute("users", usersPS);
 		return "users/updateForm"; //updateForm만들기
 	}
