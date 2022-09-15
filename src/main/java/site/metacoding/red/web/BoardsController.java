@@ -9,12 +9,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.service.BoardsService;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
+import site.metacoding.red.web.dto.response.CMRespDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
 import site.metacoding.red.web.dto.request.boards.UpdateDto;
 
@@ -48,10 +52,10 @@ public class BoardsController {
 		return "boards/updateForm"; 
 	}
 	
-	@PostMapping("/boards/update/{id}")
-	public String update(@PathVariable Integer id, UpdateDto updateDto) {
+	@PutMapping("/boards/update/{id}")
+	public @ResponseBody CMRespDto<?> update(@PathVariable Integer id, @RequestBody UpdateDto updateDto) {
 		boardsService.게시글수정하기(id, updateDto);
-		return "redirect:/boards"; 
+		return new CMRespDto<>(1, "게시글 수정 완료", null); 
 	}
 	
 	@GetMapping("/boards/delete/{id}")
