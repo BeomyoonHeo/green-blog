@@ -63,8 +63,7 @@
 	</delete>
 
 	<update id="updateToboards">
-		UPDATE boards SET usersid = null WHERE usersid =
-		#{usersid}
+		UPDATE boards SET usersid = null WHERE usersid = #{usersid}
 	</update>
 	<update id="update">
 		UPDATE boards SET title=#{title}, content=#{content}

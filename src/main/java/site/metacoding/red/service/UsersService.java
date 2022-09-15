@@ -36,18 +36,19 @@ public class UsersService {
 	public Users 로그인(LoginDto loginDto) { // username, password
 		Users UsersPs = usersDao.findUsername(loginDto.getUsername());;
 		// if로 usersPS의 password와 dto password 비교
-		if(UsersPs.getPassword().equals(loginDto.getPassword()))
+		if(UsersPs != null && UsersPs.getPassword().equals(loginDto.getPassword()))
 			return UsersPs;
 		return null;
 	}
 	
-	public void 회원수정(Integer id, UpdateDto updateDto) { // id, dto(password, email)
+	public Users 회원수정(Integer id, UpdateDto updateDto) { // id, dto(password, email)
 		// 1. 영속화
 		Users usersPS = usersDao.findById(id);
 		// 2. 영속화된 객체 변경
 		usersPS.update(updateDto);
 		// 3. DB 수행
 		usersDao.update(usersPS);
+		return usersPS;
 	}
 	
 	//@Transactional - 하나의 Transaction으로 묶음
@@ -55,7 +56,7 @@ public class UsersService {
 	public void 회원탈퇴(Integer id) {
 		usersDao.deleteById(id);
 		//boardsDao.해당회원이 적은글을 모두 찾아서 usersId를 null로 업데이트();
-		//boardsDao.updateToboards(id);
+		boardsDao.updateToboards(id);
 	} // users - delete, boards - update
 	
 	
