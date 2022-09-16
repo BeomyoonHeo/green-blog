@@ -1,5 +1,7 @@
 # MyBatis DB연결 세팅
 
+### 테이블 chracter set => utf-8로 통일하기
+- alter table 테이블명 convert to character set utf8;
 
 ### 페이징 개수 변경법
 - boards.xml에 paging 부분에 ceil(count(*)/5) totalPage
