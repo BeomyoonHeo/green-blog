@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.red.web.dto.request.boards.UpdateDto;
+import site.metacoding.red.web.dto.response.boards.DetailDto;
 
 // entity는 setter를 만들지 않음
 @NoArgsConstructor
@@ -23,6 +24,11 @@ public class Boards {
 		this.title = title;
 		this.content = content;
 		this.usersId = usersId;
+	}
+	
+	public Boards(DetailDto detailDto) {
+		this.title = detailDto.getTitle();
+		this.content = detailDto.getContent();
 	}
 	
 	public void updateBoard(UpdateDto updateDto) {

@@ -12,7 +12,8 @@
 
 	<select id="findAll"
 		resultType="site.metacoding.red.web.dto.response.boards.MainDto">
-		SELECT b.id, b.title, if(u.username is null, '익명', u.username)as username
+		SELECT b.id, b.title, if(u.username is null, '익명', u.username)as
+		username
 		FROM boards b
 		LEFT OUTER JOIN
 		users u
@@ -49,8 +50,18 @@
 	</select>
 
 	<select id="findById"
-		resultType="site.metacoding.red.domain.boards.Boards">
-		SELECT * FROM boards WHERE id = #{id}
+		resultType="site.metacoding.red.web.dto.response.boards.DetailDto">
+		SELECT b.id, b.title, b.content, (
+		SELECT COUNT(*) likeCount
+		FROM likes l
+		WHERE boardsid = #{id}
+		GROUP BY boardsid) likeCount,(
+		SELECT usersId
+		FROM likes
+		WHERE boardsid = #{id} AND usersid =
+		#{usersid}) islike
+		FROM boards b
+		WHERE b.id = #{id};
 	</select>
 
 	<select id="findUsername"
@@ -63,12 +74,22 @@
 	</delete>
 
 	<update id="updateToboards">
-		UPDATE boards SET usersid = null WHERE usersid = #{usersid}
+		UPDATE boards SET usersid = null WHERE usersid =
+		#{usersid}
 	</update>
+	
 	<update id="update">
 		UPDATE boards SET title=#{title}, content=#{content}
 		WHERE id=#{id}
 	</update>
+	
+	<insert id="insertLike">
+		INSERT INTO likes(usersId, boardsId, createdAt)
+		VALUE(#{usersId}, #{boardsId}, NOW())
+	</insert>
+	<delete id="deleteLike">
+		DELETE FROM likes WHERE usersId = #{usersId} and boardsId=#{boardsId}
+	</delete>
 
 
 </mapper>

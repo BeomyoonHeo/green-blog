@@ -9,6 +9,7 @@ import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
+import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
 import site.metacoding.red.web.dto.request.boards.UpdateDto;
@@ -32,13 +33,23 @@ public class BoardsService {
 		return pagingDto;
 		
 	}
-	public Boards 게시글상세보기(Integer id) {
-		Boards boards = boardsDao.findById(id);
-		return boards;
+	public DetailDto 게시글상세보기(Integer id, Integer usersid) {
+		DetailDto detailDto = boardsDao.findById(id, usersid);
+		return detailDto;
+	}
+	public Integer 게시글좋아요수정하기(Integer usersId, Integer boardsId, boolean islike) {
+		if(islike) {
+			boardsDao.insertLike(usersId, boardsId);
+		}else {
+			boardsDao.deleteLike(usersId, boardsId);
+		}
+		DetailDto detailDto = boardsDao.findById(boardsId, usersId);
+		Integer likeCount = detailDto.getLikeCount();
+		return likeCount;
 	}
 	
 	public void 게시글수정하기(Integer id, UpdateDto updateDto) {
-		Boards boards = boardsDao.findById(id);
+		Boards boards = new Boards(boardsDao.findById(id, null));
 		boards.updateBoard(updateDto);
 		boardsDao.update(boards);
 	}

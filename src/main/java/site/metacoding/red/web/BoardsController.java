@@ -4,6 +4,7 @@ package site.metacoding.red.web;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.service.BoardsService;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.CMRespDto;
+import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
 import site.metacoding.red.web.dto.request.boards.UpdateDto;
 
@@ -39,17 +41,39 @@ public class BoardsController {
 	}
 	
 	@GetMapping("/boards/{id}")
-	public String board(@PathVariable Integer id, Model model) {
-		Boards boards = boardsService.게시글상세보기(id);
-		model.addAttribute("boards", boards);
+	public String board(@PathVariable Integer id, Model model){
+		Integer usersid;
+		try {
+			Users usersPS = (Users)session.getAttribute("principal");
+			usersid = usersPS.getId();
+		} catch (Exception e) {
+			usersid = null;
+		}
+		DetailDto detailDto = boardsService.게시글상세보기(id, usersid);
+		model.addAttribute("boards", detailDto);
 		return "boards/detail";
 	}
 	
 	@GetMapping("/boards/update/{id}")
 	public String updateForm(@PathVariable Integer id, Model model) {
-		Boards boards = boardsService.게시글상세보기(id);
-		model.addAttribute("boards", boards);
+		DetailDto detailDto = boardsService.게시글상세보기(id, null);
+		model.addAttribute("boards", detailDto);
 		return "boards/updateForm"; 
+	}
+	@PutMapping("/boards/getLikeCount/{id}")
+	public @ResponseBody CMRespDto<?> setLike(@PathVariable Integer id, @RequestBody DetailDto dtailDto){
+		Integer likeCount = null;
+		CMRespDto<?> cmRespDto;
+		Users usersPS = (Users)session.getAttribute("principal");
+		try {
+			likeCount = boardsService.게시글좋아요수정하기(usersPS.getId(), id, dtailDto.isIslike());
+			cmRespDto = new CMRespDto<>(1, "변경 완료", likeCount);
+		} catch (Exception e) {
+			cmRespDto = new CMRespDto<>(0, "로그인 필요", likeCount);
+			// TODO: handle exception
+		}
+		
+		return cmRespDto;
 	}
 	
 	@PutMapping("/boards/update/{id}")
