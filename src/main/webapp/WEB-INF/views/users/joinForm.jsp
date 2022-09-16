@@ -13,11 +13,11 @@
 		<div class="mb-3">
 			<input id="password" type="password" class="form-control"
 				placeholder="Enter password">
-				<button id="btnUsernameSameCheck" class="btn btn-warning" type="button">유저네임 중복체크 및 비밀번호 확인</button>
 		</div>
 		<div class="mb-3">
 			<input id="passwordRepeat" type="password" class="form-control"
 				placeholder="Enter password">
+				<button id="btnUsernameSameCheck" class="btn btn-warning" type="button">유저네임 중복체크 및 비밀번호 확인</button>
 		</div>
 		<div class="mb-3">
 			<input id="email" type="email" class="form-control"

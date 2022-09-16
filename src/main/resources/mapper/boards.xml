@@ -12,9 +12,9 @@
 
 	<select id="findAll"
 		resultType="site.metacoding.red.web.dto.response.boards.MainDto">
-		SELECT *
+		SELECT b.id, b.title, if(u.username is null, '익명', u.username)as username
 		FROM boards b
-		INNER JOIN
+		LEFT OUTER JOIN
 		users u
 		ON
 		b.usersId = u.id
@@ -23,7 +23,7 @@
 		</if>
 		ORDER BY b.id DESC
 		OFFSET #{page} ROWS
-		FETCH NEXT 3 ROWS ONLY
+		FETCH NEXT 5 ROWS ONLY
 	</select>
 
 	<select id="paging"
@@ -37,7 +37,7 @@
 		FROM
 		(
 		select count(*)
-		totalCount, ceil(count(*)/3) totalPage,
+		totalCount, ceil(count(*)/5) totalPage,
 		#{page} currentPage, 0
 		first, 0
 		last

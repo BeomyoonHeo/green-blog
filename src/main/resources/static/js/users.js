@@ -1,10 +1,4 @@
-/**
- * 
- */
-
 let isUsernameSameCheck = false;
-
-
 
 //회원가입
 $("#btnJoin").click(() => { //이벤트 리스너
@@ -27,8 +21,6 @@ $("#btnUpdate").click(() => {
 $("#btnDelete").click(() => {
 	reSign();
 });
-
-
 
 function join(){
 	if (isUsernameSameCheck == false) {
@@ -63,7 +55,7 @@ function checkUsername(){
 	// 1. 사용자가 적은 username값을 가져오기
 	let username = $("#username").val();
 	let password = $("#password").val();
-	let passwordRepeat = ("#passwordRepeat").val();
+	let passwordRepeat = $("#passwordRepeat").val();
 
 	// 2. Ajax 통신
 	$.ajax(`users/usernameSameCheck?username=${username}`, {
@@ -86,12 +78,13 @@ function checkUsername(){
 	}); //주소, object, done안에는 행위(메서드 - pending이 끝나면 실행된다.)
 }
 
-function login(){ 
-	alert("로그인성공");
+
+function login(){
 	let data = {
 		username: $("#username").val(),
-		password: $("#password").val()
-	}
+		password: $("#password").val(),
+		remember: $("#remember").prop("checked")
+	};
 
 	$.ajax("/login", {
 		type: "POST",
@@ -102,6 +95,7 @@ function login(){
 		}
 	}).done((res) => {
 		if (res.code == 1) {
+			alert("로그인 성공");
 			location.href = "/";
 		} else {
 			alert("로그인 실패, 아이디 패스워드를 확인해주세요");

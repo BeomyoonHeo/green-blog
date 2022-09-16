@@ -2,6 +2,13 @@ package site.metacoding.red.web;
 
 
 
+import java.util.Arrays;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -21,7 +28,6 @@ import site.metacoding.red.web.dto.request.users.JoinDto;
 import site.metacoding.red.web.dto.request.users.LoginDto;
 import site.metacoding.red.web.dto.request.users.UpdateDto;
 import site.metacoding.red.web.dto.response.CMRespDto;
-import site.metacoding.red.utill.Script;
 
 @RequiredArgsConstructor
 @Controller
@@ -46,7 +52,12 @@ public class UsersController {
 	}
 	
 	@GetMapping("/loginForm")
-	public String loginForm() { // 쿠키 배워보기
+	public String loginForm(HttpServletRequest request, Model model) { // 쿠키 배워보기
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if(cookie.getName().equals("username"))
+				model.addAttribute(cookie.getName(), cookie.getValue());
+		}
 		return "users/loginForm";
 	}
 	
@@ -58,12 +69,19 @@ public class UsersController {
 	
 	@PostMapping("/login")
 	//viewResolver 발동 안함 - @ResponseBody를 붙여줘서 -> data를 return한다.
-	public @ResponseBody CMRespDto<?> login(@RequestBody LoginDto loginDto) {
+	public @ResponseBody CMRespDto<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+		
 		Users principal = usersService.로그인(loginDto); //service에게 (책임)위임한다.
 		
 		//historyback을 해서 정보를 남겨놔야함 - UX(편의성)
 		if(principal == null) {
 			return new CMRespDto<>(-1, "로그인 실패", null);
+		}
+		if(loginDto.isRemember()) {
+			Cookie cookie = new Cookie("username", loginDto.getUsername());
+			cookie.setMaxAge(60*60*24); //60*60*24
+			response.addCookie(cookie);
+			//response.setHeader("Set-Cookie", "username="+loginDto.getUsername() + "; HttpOnly");
 		}
 		session.setAttribute("principal", principal);
 		return new CMRespDto<>(1, "로그인 성공", null);
@@ -88,8 +106,13 @@ public class UsersController {
 	}
 	
 	@DeleteMapping("/users/{id}")
-	public @ResponseBody CMRespDto<?> delete(@PathVariable Integer id) {
+	public @ResponseBody CMRespDto<?> delete(@PathVariable Integer id, HttpServletResponse response, HttpServletRequest request) {
 		usersService.회원탈퇴(id);
+		
+		Cookie cookie = new Cookie("username", null);
+		cookie.setMaxAge(0);
+		//cookie.setPath("/"); // cookie가 생성된 path의 같은 path로 바꿔줘야 cookie가 바뀐다.
+		response.addCookie(cookie);
 		session.invalidate();
 		return new CMRespDto<>(1, "회원탈퇴성공", null);
 	}

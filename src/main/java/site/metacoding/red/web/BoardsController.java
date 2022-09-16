@@ -70,10 +70,10 @@ public class BoardsController {
 	}
 	
 	@PostMapping("/boards/write")
-	public String write(WriteDto writeDto) {
+	public @ResponseBody CMRespDto<?> write(@RequestBody WriteDto writeDto) {
 		Users users = (Users)session.getAttribute("principal");
 		boardsService.게시글쓰기(writeDto, users);
-		return "redirect:/boards";
+		return new CMRespDto<>(1, "글쓰기 성공", null);
 		
 	}
 
