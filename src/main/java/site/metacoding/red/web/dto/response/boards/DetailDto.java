@@ -11,5 +11,6 @@ public class DetailDto {
 	private String content;
 	private Integer likeCount;
 	private boolean islike;
+	private Integer usersId;
 	
 }

@@ -10,6 +10,27 @@ $("#iconHeart").click((_event) => {
 	heartClickEvent();
 });
 
+$("#btnDelete").click(()=>{
+	deleteClickEvent();
+});
+
+
+function deleteClickEvent(){
+	let boardsid = $("#boardsid").val();
+	
+	$.ajax("/boards/delete/"+boardsid,{
+		type:"DELETE",
+		dataType:"json"
+	}).done((_Onres)=>{
+		if(_Onres.code != 1){
+			alert("잘못된 접근입니다. 작성자 아이디로 로그인 해주세요");
+			_Onres.data == null?location.href="/loginForm":location.href="/loginForm"+_Onres.data;
+		}else
+		alert("삭제 완료");
+		location.href="/";
+	});
+}
+
 function heartClickEvent() {
 	check = $("#iconHeart").hasClass("fa-regular");
 	let boardid = $("#boardsid").val();

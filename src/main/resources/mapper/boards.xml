@@ -59,7 +59,7 @@
 		SELECT usersId
 		FROM likes
 		WHERE boardsid = #{id} AND usersid =
-		#{usersid}) islike
+		#{usersid}) islike, b.usersId
 		FROM boards b
 		WHERE b.id = #{id};
 	</select>
