@@ -30,8 +30,8 @@ public class PagingDto {
 		this.currentBlock =this.currentPage/this.blockCount;
 		this.startPageNum = this.currentBlock * this.blockCount + 1;
 		this.lastPageNum = this.startPageNum + 5;
-		if(this.lastPageNum >= totalPage)
-				this.lastPageNum = totalPage + 1;
+		if(this.lastPageNum > totalPage)
+				this.lastPageNum = totalPage + 1; 
 		
 	}
 }

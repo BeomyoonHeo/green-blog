@@ -1,33 +1,67 @@
-let check = JSON.parse($("#islike").val());
-
-if (check == true) {
-	$("#iconHeart").removeClass("fa-regular");
-	$("#iconHeart").addClass("fa-solid");
-	$("#iconHeart").css("color", "red");
-}
-
 $("#iconHeart").click((_event) => {
 	heartClickEvent();
 });
 
-$("#btnDelete").click(()=>{
+$("#btnDelete").click(() => {
 	deleteClickEvent();
 });
 
+$("#btnUpdateForm").click(() => {
+	updateFormClickEvent();
+});
 
-function deleteClickEvent(){
+$("#btnUpdate").click(() => {
+	updateClickEvent();
+});
+
+
+function updateClickEvent() {
+	let id = $("#id").val();
+	let body = {
+		title: $("#title").val(),
+		content: $("#updateContent").val(),
+	};
+
+	$.ajax("/boards/update/" + id, {
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json; UTF-8",
+		},
+	}).done((res) => {
+		if (res.code == 1) {
+			alert(res.msg);
+			location.href = "/boards/" + id;
+		} else {
+			alert("업데이트 실패");
+			history.back();
+		}
+	});
+};
+
+function updateFormClickEvent() {
 	let boardsid = $("#boardsid").val();
-	
-	$.ajax("/boards/delete/"+boardsid,{
-		type:"DELETE",
-		dataType:"json"
-	}).done((_Onres)=>{
-		if(_Onres.code != 1){
+
+	$.ajax("/boards/update/" + boardsid, {
+		type: "GET",
+		dataType: "json"
+	});
+}
+
+function deleteClickEvent() {
+	let boardsid = $("#boardsid").val();
+
+	$.ajax("/boards/delete/" + boardsid, {
+		type: "DELETE",
+		dataType: "json"
+	}).done((_Onres) => {
+		if (_Onres.code != 1) {
 			alert("잘못된 접근입니다. 작성자 아이디로 로그인 해주세요");
-			_Onres.data == null?location.href="/loginForm":location.href="/loginForm"+_Onres.data;
-		}else
-		alert("삭제 완료");
-		location.href="/";
+			_Onres.data == null ? location.href = "/loginForm" : location.href = "/loginForm" + _Onres.data;
+		} else
+			alert("삭제 완료");
+		location.href = "/";
 	});
 }
 
@@ -64,7 +98,7 @@ function heartClickEvent() {
 			}
 		} else {
 			alert("잘못된 접근입니다. 로그인을 진행 해주세요");
-			location.href="/loginForm";
+			location.href = "/loginForm";
 		}
 	});
 }

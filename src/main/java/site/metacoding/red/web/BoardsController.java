@@ -1,11 +1,7 @@
 package site.metacoding.red.web;
 
-
-
 import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.util.security.PermissionCheck;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.service.BoardsService;
 import site.metacoding.red.utill.CheckPermission;
@@ -40,6 +35,9 @@ public class BoardsController {
 	public String mainPage(Integer page, String keyword, Model model) {
 		userInfo = CheckPermission.CheckingPermission(session);
 		PagingDto pagingDto = boardsService.게시글목록보기(page, keyword);
+		if(pagingDto == null) {
+			return "redirect:/";
+		}
 		pagingDto.makeBlockInfo(keyword);
 		model.addAttribute("pagingDto", pagingDto);
 		return "boards/main";
@@ -55,11 +53,15 @@ public class BoardsController {
 	
 	@GetMapping("/boards/update/{id}")
 	public String updateForm(@PathVariable Integer id, Model model) {
-		Users usersPS = (Users)session.getAttribute("principal");
-		DetailDto detailDto = boardsService.게시글상세보기(id, null);
+		Users usersPS = CheckPermission.CheckingPermission(session);
+		DetailDto detailDto = boardsService.게시글상세보기(id, CheckPermission.getUsersid());
+			if(usersPS == null) {
+				return "redirect:/loginForm";
+			}else if(usersPS.getId() != detailDto.getUsersId()) {
+				return "redirect:/"; 
+			}
 		model.addAttribute("boards", detailDto);
-		model.addAttribute("users", usersPS);
-		return "boards/updateForm"; 
+		return  "boards/updateForm"; 
 	}
 	
 	@PutMapping("/boards/getLikeCount/{id}")
@@ -102,8 +104,7 @@ public class BoardsController {
 	
 	@PostMapping("/boards/write")
 	public @ResponseBody CMRespDto<?> write(@RequestBody WriteDto writeDto) {
-		Users users = (Users)session.getAttribute("principal");
-		boardsService.게시글쓰기(writeDto, users);
+		boardsService.게시글쓰기(writeDto, CheckPermission.CheckingPermission(session));
 		return new CMRespDto<>(1, "글쓰기 성공", null);
 		
 	}

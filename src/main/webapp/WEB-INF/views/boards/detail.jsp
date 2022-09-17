@@ -23,6 +23,14 @@
 	<hr />
 
 	<div id="content" value="${boards.content}">${boards.content}</div>
+<script>
+let check = JSON.parse($("#islike").val());
+
+if (check == true) {
+	$("#iconHeart").removeClass("fa-regular");
+	$("#iconHeart").addClass("fa-solid");
+	$("#iconHeart").css("color", "red");
+}</script>
 <script src="/js/boards.js"></script>
 
 </div>

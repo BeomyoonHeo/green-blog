@@ -77,18 +77,19 @@
 		UPDATE boards SET usersid = null WHERE usersid =
 		#{usersid}
 	</update>
-	
+
 	<update id="update">
 		UPDATE boards SET title=#{title}, content=#{content}
 		WHERE id=#{id}
 	</update>
-	
+
 	<insert id="insertLike">
 		INSERT INTO likes(usersId, boardsId, createdAt)
 		VALUE(#{usersId}, #{boardsId}, NOW())
 	</insert>
 	<delete id="deleteLike">
-		DELETE FROM likes WHERE usersId = #{usersId} and boardsId=#{boardsId}
+		DELETE FROM likes WHERE usersId = #{usersId} and
+		boardsId=#{boardsId}
 	</delete>
 
 

@@ -73,15 +73,20 @@ public class UsersController {
 		
 		Users principal = usersService.로그인(loginDto); //service에게 (책임)위임한다.
 		
-		//historyback을 해서 정보를 남겨놔야함 - UX(편의성)
 		if(principal == null) {
-			return new CMRespDto<>(-1, "로그인 실패", null);
+			return new CMRespDto<>(-1, "로그인 실패", null); //historyback을 해서 정보를 남겨놔야함 - UX(편의성)
 		}
 		if(loginDto.isRemember()) {
 			Cookie cookie = new Cookie("username", loginDto.getUsername());
+			cookie.setPath("/loginForm");
 			cookie.setMaxAge(60*60*24); //60*60*24
 			response.addCookie(cookie);
 			//response.setHeader("Set-Cookie", "username="+loginDto.getUsername() + "; HttpOnly");
+		}else {
+			Cookie cookie = new Cookie("username", null);
+			cookie.setPath("/loginForm");
+			cookie.setMaxAge(0); //60*60*24
+			response.addCookie(cookie);
 		}
 		session.setAttribute("principal", principal);
 		return new CMRespDto<>(1, "로그인 성공", null);
@@ -110,10 +115,12 @@ public class UsersController {
 		usersService.회원탈퇴(id);
 		
 		Cookie cookie = new Cookie("username", null);
+		cookie.setPath("/loginForm");
 		cookie.setMaxAge(0);
 		//cookie.setPath("/"); // cookie가 생성된 path의 같은 path로 바꿔줘야 cookie가 바뀐다.
 		response.addCookie(cookie);
 		session.invalidate();
+		
 		return new CMRespDto<>(1, "회원탈퇴성공", null);
 	}
 	

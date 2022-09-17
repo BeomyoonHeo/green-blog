@@ -27,6 +27,7 @@ public class Boards {
 	}
 	
 	public Boards(DetailDto detailDto) {
+		this.id = detailDto.getId();
 		this.title = detailDto.getTitle();
 		this.content = detailDto.getContent();
 	}

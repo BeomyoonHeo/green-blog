@@ -33,7 +33,7 @@
 	</table>
 	<div class="d-flex justify-content-center">
 		<ul class="pagination">
-			<li class='page-item ${pagingDto.first?"disabled":""}'><a class="page-link"
+			<li class='page-item ${pagingDto.first || pagingDto.notResult?"disabled":""}'><a class="page-link"
 				href="/boards?page=${pagingDto.currentPage - 1}&keyword=${pagingDto.keyword}">Prev</a></li>
 			<c:forEach var="page" begin="${pagingDto.startPageNum}" end="${pagingDto.lastPageNum - 1}">
 				<li class='page-item ${pagingDto.currentPage == page - 1?"active":""}'><a class='page-link'
