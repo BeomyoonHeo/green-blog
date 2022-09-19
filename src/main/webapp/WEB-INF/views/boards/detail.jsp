@@ -3,8 +3,9 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<br /> <br /> <input id="id" type="hidden" value="${detailDto.id}">
-       
+	<br /> <br /> 
+        <input id="id" type="hidden" value="${detailDto.id}">
+        <input id="lovesId" type="hidden" value="${detailDto.lovesId}">
         <div class="d-flex">
         <input id="page" type="hidden" value="${sessionScope.refferer.page}">
         <input id="keyword" type="hidden" value="${sessionScope.refferer.keyword}">
@@ -43,7 +44,7 @@
         });
     });
     // 하트 아이콘을 클릭했을때의 로직
-	$("#iconLove").click((event)=>{
+	$("#iconLove").click(()=>{
         let isLovedState = $("#iconLove").hasClass("fa-solid");
         if(isLovedState){
             deleteLove();
@@ -53,17 +54,20 @@
 	});
     
     function deleteLove(){
-            let id = $("#id").val();
+        let id = $("#id").val();
+        let lovesId = $("#lovesId").val();
         
-        $.ajax("/boards/"+id+"/loves",{
+        
+        $.ajax("/boards/"+id+"/loves/"+lovesId,{
             type:"DELETE",
             dataType:"json",
         }).done((res)=>{
             if(res.code == 1){ 
-                renderLove();
+                renderCancelLoves();
                 let count = $("#countLove").text();
+                $("#countLove").text(Number(count)-1);
                 }else{
-                    alert("좋아요 실패");
+                    alert("좋아요 취소 실패");
                 }
         });
         
@@ -79,6 +83,8 @@
             if(res.code == 1){ 
                 renderLove();
                 let count = $("#countLove").text();
+                $("#countLove").text(Number(count)+1);
+                $("#lovesId").val(res.data);
                 }else{
                     alert("좋아요 실패");
                 }
@@ -86,14 +92,13 @@
     }
     
     function renderLove(){
-
-        $("#iconHeart").removeClass("fa-regular");
-        $("#iconHeart").addClass("fa-solid");
+        $("#iconLove").removeClass("fa-regular");
+        $("#iconLove").addClass("fa-solid");
     }
     
     function renderCancelLoves(){
-        $("#iconHeart").removeClass("fa-solid");
-        $("#iconHeart").addClass("fa-regular");
+        $("#iconLove").removeClass("fa-solid");
+        $("#iconLove").addClass("fa-regular");
     }
 </script>
 

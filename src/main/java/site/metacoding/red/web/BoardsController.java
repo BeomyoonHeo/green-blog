@@ -90,14 +90,14 @@ public class BoardsController {
 		Users principal = (Users)session.getAttribute("principal");
 		Loves loves = new Loves(principal.getId(), id);
 		boardsService.좋아요(loves);
-		return new CMRespDto<>(1, "좋아요 성공", null);
+		Integer loveid = boardsService.게시글상세보기(id ,principal.getId()).getLovesId();
+		return new CMRespDto<>(1, "좋아요 성공", loveid);
 	}
 	
-	@DeleteMapping("/boards/{id}/loves")
-	public @ResponseBody CMRespDto<?> deleteLoves(@PathVariable Integer id){
-		Users principal = (Users)session.getAttribute("principal");
-		Loves loves = new Loves(principal.getId(), id);
-		return new CMRespDto<>(1, "좋아요 성공", null);
+	@DeleteMapping("/boards/{id}/loves/{lovesId}")
+	public @ResponseBody CMRespDto<?> deleteLoves(@PathVariable Integer id, @PathVariable Integer lovesId){
+		boardsService.좋아요취소(lovesId);
+		return new CMRespDto<>(1, "좋아요 취소 성공", null);
 	}
 	
 	@PostMapping("/boards/write")

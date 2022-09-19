@@ -30,6 +30,11 @@ public class BoardsService {
 	}
 	
 	
+	public void 좋아요취소(Integer id) {
+		lovesDao.deleteById(id);
+	}
+	
+	
 	public PagingDto 게시글목록보기(Integer page, String keyword) {
 		if(page == null)
 			page = 0;

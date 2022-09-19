@@ -21,11 +21,11 @@
 	</update>
 
 	<select id="findById" resultType="site.metacoding.red.domain.love.Loves">
-		SELECT * FROM users WHERE id = #{id}
+		SELECT * FROM loves WHERE id = #{id}
 	</select>
 
 	<delete id="deleteById">
-		DELETE FROM users WHERE id = #{id}
+		DELETE FROM loves WHERE id = #{id}
 	</delete>
 	
 	
