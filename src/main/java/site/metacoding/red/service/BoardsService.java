@@ -12,6 +12,8 @@ import site.metacoding.red.domain.love.Loves;
 import site.metacoding.red.domain.love.LovesDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
+import site.metacoding.red.web.dto.request.loves.LovesDto;
+import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
 import site.metacoding.red.web.dto.request.boards.UpdateDto;
@@ -40,9 +42,19 @@ public class BoardsService {
 		return pagingDto;
 		
 	}
-	public Boards 게시글상세보기(Integer id) {
+	public DetailDto 게시글상세보기(Integer id, Integer principalId) {
 		Boards boards = boardsDao.findById(id);
-		return boards;
+		LovesDto lovesDto = lovesDao.findByBoardsId(id, principalId);
+		if(lovesDto == null) {
+			lovesDto = new LovesDto();
+			lovesDto.setCount(0);
+			lovesDto.setLoved(false);
+		}
+		return new DetailDto(boards, lovesDto);
+	}
+	
+	public Boards 게시글수정화면데이터가져오기(Integer id) {
+		return boardsDao.findById(id);
 	}
 	
 	public void 게시글수정하기(Integer id, UpdateDto updateDto) {
