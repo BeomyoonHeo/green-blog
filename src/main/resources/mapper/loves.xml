@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.red.domain.love.LovesDao">
+	
+	<insert id="insert">
+		INSERT INTO loves(boardsId, Usersid, createdAt) 
+		VALUES( #{boardsId}, #{Usersid}, NOW())
+	</insert>
+	
+	<select id="findAll" resultType="site.metacoding.red.domain.love.Loves">
+		SELECT * FROM loves
+	</select>
+	
+	<update id="update">
+		UPDATE loves SET 
+		boardsId=#{boardsId}, usersId=#{usersId}
+		WHERE id=#{id}
+	</update>
+
+	<select id="findById" resultType="site.metacoding.red.domain.love.Loves">
+		SELECT * FROM users WHERE id = #{id}
+	</select>
+
+	<delete id="deleteById">
+		DELETE FROM users WHERE id = #{id}
+	</delete>
+	
+	
+
+</mapper>

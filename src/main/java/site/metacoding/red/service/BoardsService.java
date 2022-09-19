@@ -2,11 +2,14 @@ package site.metacoding.red.service;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.boards.BoardsDao;
+import site.metacoding.red.domain.love.Loves;
+import site.metacoding.red.domain.love.LovesDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
@@ -18,6 +21,11 @@ import site.metacoding.red.web.dto.request.boards.UpdateDto;
 public class BoardsService {
 	
 	private final BoardsDao boardsDao;
+	private final LovesDao lovesDao;
+	
+	public void 좋아요(Loves loves) {
+		lovesDao.insert(loves);
+	}
 	
 	
 	public PagingDto 게시글목록보기(Integer page, String keyword) {

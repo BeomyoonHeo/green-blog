@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.Boards;
+import site.metacoding.red.domain.love.Loves;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.service.BoardsService;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
@@ -78,6 +79,14 @@ public class BoardsController {
 	@GetMapping("/boards/write")
 	public String writeBoard() {
 		return "boards/writeForm";
+	}
+	
+	@PostMapping("/boards/{id}/loves")
+	public @ResponseBody CMRespDto<?> insertLoves(@PathVariable Integer id){
+		Users principal = (Users)session.getAttribute("principal");
+		Loves loves = new Loves(principal.getId(), id);
+		boardsService.좋아요(loves);
+		return new CMRespDto<>(1, "좋아요 성공", null);
 	}
 	
 	@PostMapping("/boards/write")
