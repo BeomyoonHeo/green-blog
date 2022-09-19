@@ -12,7 +12,6 @@ import site.metacoding.red.domain.love.Loves;
 import site.metacoding.red.domain.love.LovesDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
-import site.metacoding.red.web.dto.request.loves.LovesDto;
 import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
