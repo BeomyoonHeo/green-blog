@@ -23,9 +23,9 @@ public class BoardsService {
 	public PagingDto 게시글목록보기(Integer page, String keyword) {
 		if(page == null)
 			page = 0;
-		Integer startNum = page * 5;
-		List<MainDto> pageList = boardsDao.findAll(startNum, keyword);
-		PagingDto pagingDto = boardsDao.paging(page, keyword);
+		Integer startNum = page * PagingDto.ROW;
+		List<MainDto> pageList = boardsDao.findAll(startNum, keyword, PagingDto.ROW);
+		PagingDto pagingDto = boardsDao.paging(page, keyword, PagingDto.ROW);
 		pagingDto.setMainDtos(pageList);
 		if (pagingDto.getTotalCount() == 0)
 			pagingDto.setNotResult(true);

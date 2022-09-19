@@ -23,7 +23,7 @@
 		</if>
 		ORDER BY b.id DESC
 		OFFSET #{page} ROWS
-		FETCH NEXT 5 ROWS ONLY
+		FETCH NEXT #{ROW} ROWS ONLY
 	</select>
 
 	<select id="paging"
@@ -37,7 +37,7 @@
 		FROM
 		(
 		select count(*)
-		totalCount, ceil(count(*)/5) totalPage,
+		totalCount, ceil(count(*)/#{ROW}) totalPage,
 		#{page} currentPage, 0
 		first, 0
 		last

@@ -2,13 +2,14 @@ package site.metacoding.red.web.dto.response.boards;
 
 import java.util.List;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class PagingDto {
-	
+	public static final int ROW = 5;
 	private boolean isNotResult;
 	private String keyword;
 	private Integer blockCount; //  상수  한페이지에 페이지 넘수 개수(5) 1-5, 6-10
@@ -30,7 +31,7 @@ public class PagingDto {
 		this.currentBlock =this.currentPage/this.blockCount;
 		this.startPageNum = this.currentBlock * this.blockCount + 1;
 		this.lastPageNum = this.startPageNum + 5;
-		if(this.lastPageNum >= totalPage)
+		if(this.lastPageNum > totalPage)
 				this.lastPageNum = totalPage + 1;
 		
 	}

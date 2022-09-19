@@ -15,8 +15,7 @@ pageEncoding="UTF-8"%> <%@ include file="../layout/header.jsp"%>
     </div>
     <div class="mb-3">
       <textarea id="content" class="form-control" rows="8">
-${boards.content}</textarea
-      >
+${boards.content}</textarea>
     </div>
     <button id="btnUpdate" type="button" class="btn btn-primary">
       수정완료
@@ -24,15 +23,25 @@ ${boards.content}</textarea
   </form>
 </div>
 <script>
+    
 
   $("#btnUpdate").click(() => {
+      update();
+  });
+
+  $("#content").summernote({
+	tabsize:1,
+    height: 500
+  });
+    
+function update(){
     let id = $("#id").val();
     let body = {
       title: $("#title").val(),
       content: $("#content").val(),
     };
 
-    $.ajax("/boards/update/" + id, {
+    $.ajax("/boards/" + id, {
       type: "PUT",
       dataType: "json",
       data: JSON.stringify(body),
@@ -48,12 +57,7 @@ ${boards.content}</textarea
         history.back();
       }
     });
-  });
-
-  $("#content").summernote({
-	tabsize:1,
-    height: 500
-  });
+}
 </script>
 
 <%@ include file="../layout/footer.jsp"%>
