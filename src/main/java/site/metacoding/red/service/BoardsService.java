@@ -43,14 +43,7 @@ public class BoardsService {
 		
 	}
 	public DetailDto 게시글상세보기(Integer id, Integer principalId) {
-		Boards boards = boardsDao.findById(id);
-		LovesDto lovesDto = lovesDao.findByBoardsId(id, principalId);
-		if(lovesDto == null) {
-			lovesDto = new LovesDto();
-			lovesDto.setCount(0);
-			lovesDto.setLoved(false);
-		}
-		return new DetailDto(boards, lovesDto);
+		return boardsDao.findByDetail(id, principalId);
 	}
 	
 	public Boards 게시글수정화면데이터가져오기(Integer id) {

@@ -1,18 +1,25 @@
 package site.metacoding.red.web.dto.response.boards;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.red.domain.boards.Boards;
-import site.metacoding.red.web.dto.request.loves.LovesDto;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class DetailDto {
-	private Boards boards;
-	private LovesDto LovesDto;
+	private Integer id;
+	private String title;
+	private String content;
+	private Integer usersId;
+	private Timestamp createdAt;
+	private Integer loveCount;
+	private Integer lovesId;
+	private boolean isLoved;
 
 }

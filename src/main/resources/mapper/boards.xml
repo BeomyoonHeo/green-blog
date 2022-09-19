@@ -25,6 +25,18 @@
 		OFFSET #{page} ROWS
 		FETCH NEXT #{ROW} ROWS ONLY
 	</select>
+	
+	
+	
+	<select id="findByDetail" resultType="site.metacoding.red.web.dto.response.boards.DetailDto">
+		SELECT b.*,
+		(SELECT id FROM loves WHERE usersId = #{principalId} AND boardsId = #{boardsId}) lovesId,
+		(SELECT 1 FROM loves WHERE usersId = #{principalId} AND boardsId = #{boardsId}) isloved,
+		(SELECT COUNT(*) FROM loves WHERE boardsId = #{boardsId}) loveCount
+		FROM boards b
+		WHERE b.id = #{boardsId}
+	</select>
+	
 
 	<select id="paging"
 		resultType="site.metacoding.red.web.dto.response.boards.PagingDto">

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import site.metacoding.red.web.dto.request.boards.WriteDto;
+import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
 
@@ -17,4 +18,5 @@ public interface BoardsDao {
 	public void deleteById(Integer id);
 	public void updateToboards(Integer usersid);
 	public PagingDto paging(@Param("page") Integer page, @Param("keyword") String keyword, @Param("ROW") Integer ROW);
+	public DetailDto findByDetail(@Param("boardsId") Integer boardsId, @Param("principalId") Integer principalId);
 }

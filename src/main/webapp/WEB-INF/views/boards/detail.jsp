@@ -3,12 +3,12 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<br /> <br /> <input id="id" type="hidden" value="${detailDto.boards.id}">
+	<br /> <br /> <input id="id" type="hidden" value="${detailDto.id}">
        
         <div class="d-flex">
         <input id="page" type="hidden" value="${sessionScope.refferer.page}">
         <input id="keyword" type="hidden" value="${sessionScope.refferer.keyword}">
-			<a href="/boards/${detailDto.boards.id}/updateForm" class="btn btn-warning">수정하러가기</a>
+			<a href="/boards/${detailDto.id}/updateForm" class="btn btn-warning">수정하러가기</a>
 			<form>
 				<button id="btnDelete" type="button" class="btn btn-danger">삭제</button>
 			</form>
@@ -17,14 +17,14 @@
 
 	<br />
 	<div class="d-flex justify-content-between">
-		<h3>${detailDto.boards.title}</h3>
-		<div> 좋아요 수 : <span id="countLove">${detailDto.lovesDto.count}</span> 
-		<i id="iconLove" class='${detailDto.lovesDto.loved ? "fa-solid" : "fa-regular"} fa-heart my_pointer my_red'></i>
+		<h3>${detailDto.title}</h3>
+		<div> 좋아요 수 : <span id="countLove">${detailDto.loveCount}</span> 
+		<i id="iconLove" class='${detailDto.loved ? "fa-solid" : "fa-regular"} fa-heart my_pointer my_red'></i>
 		</div>
 	</div>
 	<hr />
 
-	<div>${detailDto.boards.content}</div>
+	<div>${detailDto.content}</div>
 <script>
     $("#btnDelete").click(()=>{
         let id = $("#id").val();
@@ -53,6 +53,19 @@
 	});
     
     function deleteLove(){
+            let id = $("#id").val();
+        
+        $.ajax("/boards/"+id+"/loves",{
+            type:"DELETE",
+            dataType:"json",
+        }).done((res)=>{
+            if(res.code == 1){ 
+                renderLove();
+                let count = $("#countLove").text();
+                }else{
+                    alert("좋아요 실패");
+                }
+        });
         
     }
     
