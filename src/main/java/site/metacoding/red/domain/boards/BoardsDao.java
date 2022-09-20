@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;

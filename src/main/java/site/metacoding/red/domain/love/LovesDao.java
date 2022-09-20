@@ -1,6 +1,7 @@
 package site.metacoding.red.domain.love;
-
 import java.util.List;
+
+
 public interface LovesDao {
 	public void insert(Loves loves);
 	public List<Loves> findAll();

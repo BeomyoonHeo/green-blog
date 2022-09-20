@@ -1,5 +1,6 @@
 package site.metacoding.red.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -24,13 +25,14 @@ public class BoardsService {
 	private final BoardsDao boardsDao;
 	private final LovesDao lovesDao;
 	
-	public void 좋아요(Loves loves) {
+	public Loves 좋아요(Loves loves) {
 		lovesDao.insert(loves);
+		return loves;
 	}
 	
 	
-	public void 좋아요취소(Integer id) {
-		lovesDao.deleteById(id);
+	public void 좋아요취소(Integer lovesId) {
+		lovesDao.deleteById(lovesId);
 	}
 	
 	

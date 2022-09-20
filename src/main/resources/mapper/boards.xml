@@ -12,7 +12,8 @@
 
 	<select id="findAll"
 		resultType="site.metacoding.red.web.dto.response.boards.MainDto">
-		SELECT b.id, b.title, if(u.username is null, '익명', u.username)as username
+		SELECT b.id, b.title, if(u.username is null, '익명', u.username)as
+		username
 		FROM boards b
 		LEFT OUTER JOIN
 		users u
@@ -25,18 +26,20 @@
 		OFFSET #{page} ROWS
 		FETCH NEXT #{ROW} ROWS ONLY
 	</select>
-	
-	
-	
-	<select id="findByDetail" resultType="site.metacoding.red.web.dto.response.boards.DetailDto">
-		SELECT b.*,
-		(SELECT id FROM loves WHERE usersId = #{principalId} AND boardsId = #{boardsId}) lovesId,
-		(SELECT 1 FROM loves WHERE usersId = #{principalId} AND boardsId = #{boardsId}) isloved,
-		(SELECT COUNT(*) FROM loves WHERE boardsId = #{boardsId}) loveCount
+
+
+
+	<select id="findByDetail"
+		resultType="site.metacoding.red.web.dto.response.boards.DetailDto">
+		SELECT b.*, l.id lovesId, 
+		if(l.id IS NULL, 0, 1) isloved, (SELECT COUNT(*) FROM loves
+		WHERE boardsid = #{boardsId}) loveCount
 		FROM boards b
-		WHERE b.id = #{boardsId}
+		LEFT OUTER join(SELECT * FROM loves WHERE usersid = #{principalId})l
+		ON b.id = l.boardsid
+		WHERE b.id = #{boardsId};
 	</select>
-	
+
 
 	<select id="paging"
 		resultType="site.metacoding.red.web.dto.response.boards.PagingDto">
@@ -75,7 +78,8 @@
 	</delete>
 
 	<update id="updateToboards">
-		UPDATE boards SET usersid = null WHERE usersid = #{usersid}
+		UPDATE boards SET usersid = null WHERE usersid =
+		#{usersid}
 	</update>
 	<update id="update">
 		UPDATE boards SET title=#{title}, content=#{content}

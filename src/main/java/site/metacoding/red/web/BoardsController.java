@@ -90,8 +90,7 @@ public class BoardsController {
 		Users principal = (Users)session.getAttribute("principal");
 		Loves loves = new Loves(principal.getId(), id);
 		boardsService.좋아요(loves);
-		Integer loveid = boardsService.게시글상세보기(id ,principal.getId()).getLovesId();
-		return new CMRespDto<>(1, "좋아요 성공", loveid);
+		return new CMRespDto<>(1, "좋아요 성공", loves); // mybatis에서 return type을 명시하지 않아도 insert후 데이터를 리턴해준다.
 	}
 	
 	@DeleteMapping("/boards/{id}/loves/{lovesId}")

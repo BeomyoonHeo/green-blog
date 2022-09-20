@@ -84,7 +84,7 @@
                 renderLove();
                 let count = $("#countLove").text();
                 $("#countLove").text(Number(count)+1);
-                $("#lovesId").val(res.data);
+                $("#lovesId").val(res.data.id);
                 }else{
                     alert("좋아요 실패");
                 }
