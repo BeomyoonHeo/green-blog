@@ -61,31 +61,35 @@ public class BoardsController {
 		return "boards/detail";
 	}
 	
-	@GetMapping("/boards/{id}/updateForm")
+	//인증 필요 - 인증이 필요한 주소에는 패턴을 걸어놓아야 된다.
+	@GetMapping("/s/boards/{id}/updateForm")
 	public String updateForm(@PathVariable Integer id, Model model) {
 		Boards boards = boardsService.게시글수정화면데이터가져오기(id);
 		model.addAttribute("boards", boards);
 		return "boards/updateForm"; 
 	}
 	
-	@PutMapping("/boards/{id}")
-	public @ResponseBody CMRespDto<?> update(@PathVariable Integer id, @RequestBody UpdateDto updateDto) {
+	//인증 필요
+	@PutMapping("/s/api/boards/{id}")
+	public @ResponseBody CMRespDto<?> update(@PathVariable Integer id, @RequestBody UpdateDto updateDto)throws RuntimeException {
 		boardsService.게시글수정하기(id, updateDto);
 		return new CMRespDto<>(1, "게시글 수정 완료", null); 
 	}
 	
-	@DeleteMapping("/boards/{id}")
+	//인증 필요
+	@DeleteMapping("/s/api/boards/{id}")
 	public @ResponseBody CMRespDto<?> update(@PathVariable Integer id) {
 		boardsService.게시글삭제하기(id);
 		return new CMRespDto<>(1, "삭제완료", null); 
 	}
 	
-	@GetMapping("/boards/write")
+	@GetMapping("/s/boards/write")
 	public String writeBoard() {
 		return "boards/writeForm";
 	}
 	
-	@PostMapping("/boards/{id}/loves")
+	//인증 필요
+	@PostMapping("/s/api/boards/{id}/loves")
 	public @ResponseBody CMRespDto<?> insertLoves(@PathVariable Integer id){
 		Users principal = (Users)session.getAttribute("principal");
 		Loves loves = new Loves(principal.getId(), id);
@@ -93,13 +97,15 @@ public class BoardsController {
 		return new CMRespDto<>(1, "좋아요 성공", loves); // mybatis에서 return type을 명시하지 않아도 insert후 데이터를 리턴해준다.
 	}
 	
-	@DeleteMapping("/boards/{id}/loves/{lovesId}")
+	//인증 필요
+	@DeleteMapping("/s/api/boards/{id}/loves/{lovesId}")
 	public @ResponseBody CMRespDto<?> deleteLoves(@PathVariable Integer id, @PathVariable Integer lovesId){
 		boardsService.좋아요취소(lovesId);
 		return new CMRespDto<>(1, "좋아요 취소 성공", null);
 	}
 	
-	@PostMapping("/boards/write")
+	//인증 필요
+	@PostMapping("/s/api/boards/write")
 	public @ResponseBody CMRespDto<?> write(@RequestBody WriteDto writeDto) {
 		Users users = (Users)session.getAttribute("principal");
 		boardsService.게시글쓰기(writeDto, users);

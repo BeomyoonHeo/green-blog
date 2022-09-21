@@ -1,14 +1,16 @@
 package site.metacoding.red.web;
 
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.users.Users;
+import site.metacoding.red.handler.ex.MyApiException;
 import site.metacoding.red.service.UsersService;
 import site.metacoding.red.web.dto.request.users.JoinDto;
 import site.metacoding.red.web.dto.request.users.LoginDto;
@@ -57,13 +60,20 @@ public class UsersController {
 		return "users/loginForm";
 	}
 	
-	@PostMapping("/join")
-	public @ResponseBody CMRespDto<?> join(@RequestBody JoinDto joinDto) {
+	@PostMapping("/api/join")
+	public @ResponseBody CMRespDto<?> join(@RequestBody @Valid JoinDto joinDto, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			System.out.println("에러가 있습니다.");
+			FieldError felist = bindingResult.getFieldError();
+			throw new MyApiException(felist.getDefaultMessage());
+		}else {
+			System.out.println("에러가 없습니다.");
+		}
 		usersService.회원가입(joinDto); //service에게 (책임)위임한다.
 		return new CMRespDto<>(1, "회원가입성공", null);
 	}
 	
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	//viewResolver 발동 안함 - @ResponseBody를 붙여줘서 -> data를 return한다.
 	public @ResponseBody CMRespDto<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
 		
@@ -83,26 +93,25 @@ public class UsersController {
 		return new CMRespDto<>(1, "로그인 성공", null);
 	}
 	
-	@GetMapping("/users/{id}")
+	//인증 필요
+	@GetMapping("/s/users/{id}")
 	public String updateForm(@PathVariable Integer id, Model model) {
 		Users usersPS = (Users)session.getAttribute("principal");
-		if(usersPS.getId() != id) {
-			session.invalidate();
-			return "redirect:/";
-		}
 		model.addAttribute("users", usersPS);
-		return "users/updateForm"; //updateForm만들기
+		return "users/updateForm";
 	}
 	
-	@PutMapping("/users/{id}")
+	//인증 필요
+	@PutMapping("/s/api/users/{id}")
 	public @ResponseBody CMRespDto<?> update(@PathVariable Integer id, @RequestBody UpdateDto updateDto) {
 		Users usersPS = usersService.회원수정(id, updateDto);
 		session.setAttribute("principal", usersPS);
 		return new CMRespDto<>(1, "회원수정 성공", null);
 	}
 	
-	@DeleteMapping("/users/{id}")
-	public @ResponseBody CMRespDto<?> delete(@PathVariable Integer id, HttpServletResponse response, HttpServletRequest request) {
+	//인증 필요
+	@DeleteMapping("/s/api/users/{id}")
+	public @ResponseBody CMRespDto<?> delete(@PathVariable Integer id, HttpServletResponse response) {
 		usersService.회원탈퇴(id);
 		
 		Cookie cookie = new Cookie("username", null);

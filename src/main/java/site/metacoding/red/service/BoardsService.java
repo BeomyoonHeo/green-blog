@@ -1,6 +1,5 @@
 package site.metacoding.red.service;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -12,6 +11,7 @@ import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.love.Loves;
 import site.metacoding.red.domain.love.LovesDao;
 import site.metacoding.red.domain.users.Users;
+import site.metacoding.red.handler.ex.MyException;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.DetailDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
@@ -52,12 +52,22 @@ public class BoardsService {
 		return boardsDao.findByDetail(id, principalId);
 	}
 	
-	public Boards 게시글수정화면데이터가져오기(Integer id) {
-		return boardsDao.findById(id);
+	public Boards 게시글수정화면데이터가져오기(Integer id){
+		
+		Boards boards = boardsDao.findById(id);
+		
+		if(boards == null) {
+			throw new MyException(id+"의 게시글을 찾을 수 없습니다.");
+		}
+		
+		return boards;
 	}
 	
 	public void 게시글수정하기(Integer id, UpdateDto updateDto) {
 		Boards boards = boardsDao.findById(id);
+		if(boards == null) { //ds catch문에 throw한다.
+			throw new RuntimeException(id+"의 게시글을 찾을 수 없습니다.");
+		}
 		boards.updateBoard(updateDto);
 		boardsDao.update(boards);
 	}

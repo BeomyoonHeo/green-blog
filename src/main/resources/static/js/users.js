@@ -22,19 +22,70 @@ $("#btnDelete").click(() => {
 	reSign();
 });
 
-function join(){
-	if (isUsernameSameCheck == false) {
-		alert("아이디 중복 체크를 진행해주세요");
-		return;
+function patternCheck(data){
+	let check;
+	let pattern = /\s/g;
+	let upper = /[A-Z]/;
+	let korRule =  /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+	let checkEmail = /[a-zA-z0-9]+@[a-zA-z]+[.]+[a-zA-z.]+/;
+	
+	if(korRule.test(data.username)){
+		alert("아이디에서 한글이 발견되었습니다 제외해주세요");
+		check = 1;
 	}
+	else if(pattern.test(data.username)){
+		alert("아이디에서 공백이 발견되었습니다 제외해주세요");
+		check = 2;
+	}
+	else if(!upper.test(data.username)){
+		alert("아이디를한글자 이상 대문자로 입력해주세요");
+		check = 3;
+		
+	}else if(!checkEmail.test(data.email)){
+		alert("이메일형식이 올바르지 않습니다.");
+		check = 4;
+		
+	}else if(pattern.test(data.password)){
+		alert("비밀번호에서 공백이 발견되었습니다 제외해주세요");
+		check = 5;
+		
+	}else if(korRule.test(data.password)){
+		alert("비밀번호에서 한글이 발견되었습니다 제외해주세요");
+		check = 6;
+		
+	}else if(pattern.test(data.email)){
+		alert("이메일에서 공백이 발견되었습니다 제외해주세요");
+		check = 7;
+		
+	}else{
+		check = 0;
+	}
+	console.log(data.email);
+	return check;
+}
+
+function join() {
+
 	// 0. 통신 오브젝트 생성
 	let data = {
 		username: $("#username").val(),
 		password: $("#password").val(),
 		email: $("#email").val(),
 	}
-
-	$.ajax("/join", {
+	let check = patternCheck(data);
+	if(check != 0){
+		return;
+	}
+	let passwordRepeat = $("#passwordRepeat").val();
+	if (isUsernameSameCheck == false) {
+		alert("아이디 중복 체크를 진행해주세요");
+		return;
+	}
+	if(passwordRepeat != data.password){
+		alert("패스워드가 동일하지 않습니다.");
+		return;
+	}
+	$.ajax("/api/join", {
 		type: "POST",
 		dataType: "json", //돌려 받는 타입명
 		data: JSON.stringify(data), // 전달하는 타입명
@@ -42,20 +93,21 @@ function join(){
 			"Content-Type": "application/json" // spring에게 알려주는 것 - json으로 보내겠다. mime type
 		}
 	}).done((res) => {
-		console.log(res);
-		alert(res.msg);
-		location.href = "/loginForm";
-
+		if(res.code == 1){
+			alert(res.msg);
+			location.href = "/loginForm";	
+		}else{
+			alert(res.msg);
+			history.back;
+		}
 	});
 }
 
-function checkUsername(){
-		// 0. 통신 오브젝트 생성 (Get 요청은 body가 없다.)
+function checkUsername() {
+	// 0. 통신 오브젝트 생성 (Get 요청은 body가 없다.)
 
 	// 1. 사용자가 적은 username값을 가져오기
 	let username = $("#username").val();
-	let password = $("#password").val();
-	let passwordRepeat = $("#passwordRepeat").val();
 
 	// 2. Ajax 통신
 	$.ajax(`users/usernameSameCheck?username=${username}`, {
@@ -65,7 +117,7 @@ function checkUsername(){
 	}).done((res) => {
 		if (res.code == 1) {
 			//alert("통신성공");
-			if (res.data == false && password == passwordRepeat) {
+			if (res.data == false) {
 				alert("아이디가 중복되지 않았습니다.");
 				isUsernameSameCheck = true;
 			} else {
@@ -79,14 +131,14 @@ function checkUsername(){
 }
 
 
-function login(){
+function login() {
 	let data = {
 		username: $("#username").val(),
 		password: $("#password").val(),
 		remember: $("#remember").prop("checked")
 	};
 
-	$.ajax("/login", {
+	$.ajax("/api/login", {
 		type: "POST",
 		dataType: "json", //응답데이터 타입명
 		data: JSON.stringify(data), // 요청데이터 타입명
@@ -104,14 +156,14 @@ function login(){
 	//람다식을 사용하면 코드가 간결해지고, 스코프가 명확해진다.
 }
 
-function update(){
-		let data = {
+function update() {
+	let data = {
 		password: $("#password").val(),
 		email: $("#email").val(),
 	};
 	let id = $("#id").val();
 	//el표현식은 script안에 넣으면 안된다.
-	$.ajax("/users/" + id, {
+	$.ajax("/s/api/users/" + id, {
 		type: "PUT",
 		dataType: "json", //응답데이터 타입명
 		data: JSON.stringify(data), // 요청데이터 타입명
@@ -131,10 +183,10 @@ function update(){
 	});
 	//람다식을 사용하면 코드가 간결해지고, 스코프가 명확해진다.
 }
-function reSign(){
-		let id = $("#id").val();
+function reSign() {
+	let id = $("#id").val();
 	//el표현식은 script안에 넣으면 안된다.
-	$.ajax("/users/" + id, {
+	$.ajax("/s/api/users/" + id, {
 		type: "DELETE",
 		dataType: "json" //응답데이터 타입명
 	}).done((res) => {

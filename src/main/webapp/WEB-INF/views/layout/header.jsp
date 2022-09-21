@@ -49,10 +49,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
               </c:when>
               <c:otherwise>
                 <li class="nav-item">
-                  <a class="nav-link" href="/boards/write">글쓰기</a>
+                  <a class="nav-link" href="/s/boards/write">글쓰기</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/users/${principal.id}"
+                  <a class="nav-link" href="/s/users/${principal.id}"
                     >회원정보보기</a
                   >
                 </li>

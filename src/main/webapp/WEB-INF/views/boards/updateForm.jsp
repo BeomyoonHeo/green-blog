@@ -22,42 +22,12 @@ ${boards.content}</textarea>
     </button>
   </form>
 </div>
+<script src="/js/boards.js"></script>
 <script>
-    
-
-  $("#btnUpdate").click(() => {
-      update();
-  });
-
   $("#content").summernote({
 	tabsize:1,
     height: 500
   });
-    
-function update(){
-    let id = $("#id").val();
-    let body = {
-      title: $("#title").val(),
-      content: $("#content").val(),
-    };
-
-    $.ajax("/boards/" + id, {
-      type: "PUT",
-      dataType: "json",
-      data: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json; UTF-8",
-      },
-    }).done((res) => {
-      if (res.code == 1) {
-        alert(res.msg);
-        location.href = "/boards/" + id;
-      } else {
-        alert("업데이트 실패");
-        history.back();
-      }
-    });
-}
 </script>
 
 <%@ include file="../layout/footer.jsp"%>

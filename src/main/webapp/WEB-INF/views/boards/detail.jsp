@@ -9,10 +9,12 @@
         <div class="d-flex">
         <input id="page" type="hidden" value="${sessionScope.refferer.page}">
         <input id="keyword" type="hidden" value="${sessionScope.refferer.keyword}">
-			<a href="/boards/${detailDto.id}/updateForm" class="btn btn-warning">수정하러가기</a>
+        <c:if test="${!empty sessionScope.principal}">
+			<a href="/s/boards/${detailDto.id}/updateForm" class="btn btn-warning">수정하러가기</a>
 			<form>
 				<button id="btnDelete" type="button" class="btn btn-danger">삭제</button>
 			</form>
+		</c:if>
 		</div>
 
 
@@ -26,80 +28,7 @@
 	<hr />
 
 	<div>${detailDto.content}</div>
-<script>
-    $("#btnDelete").click(()=>{
-        let id = $("#id").val();
-        let page = $("#page").val();
-        let keyword = $("#keyword").val();
-        $.ajax("/boards/"+id,{
-            type:"DELETE",
-            dataType:"json",
-        }).done((res)=>{
-            if(res.code == 1){
-                alert("삭제완료");
-                location.href="/boards?page="+page+"&keyword="+keyword;
-            }else{
-                alert("글 삭제 실패");
-            }
-        });
-    });
-    // 하트 아이콘을 클릭했을때의 로직
-	$("#iconLove").click(()=>{
-        let isLovedState = $("#iconLove").hasClass("fa-solid");
-        if(isLovedState){
-            deleteLove();
-        }else{
-            insertLove();
-        }
-	});
-    
-    function deleteLove(){
-        let id = $("#id").val();
-        let lovesId = $("#lovesId").val();
-        
-        
-        $.ajax("/boards/"+id+"/loves/"+lovesId,{
-            type:"DELETE",
-            dataType:"json",
-        }).done((res)=>{
-            if(res.code == 1){ 
-                renderCancelLoves();
-                let count = $("#countLove").text();
-                $("#countLove").text(Number(count)-1);
-                }else{
-                    alert("좋아요 취소 실패");
-                }
-        });
-        
-    }
-    
-    function insertLove(){
-        let id = $("#id").val();
-        
-        $.ajax("/boards/"+id+"/loves",{
-            type:"POST",
-            dataType:"json",
-        }).done((res)=>{
-            if(res.code == 1){ 
-                renderLove();
-                let count = $("#countLove").text();
-                $("#countLove").text(Number(count)+1);
-                $("#lovesId").val(res.data.id);
-                }else{
-                    alert("좋아요 실패");
-                }
-        });
-    }
-    
-    function renderLove(){
-        $("#iconLove").removeClass("fa-regular");
-        $("#iconLove").addClass("fa-solid");
-    }
-    
-    function renderCancelLoves(){
-        $("#iconLove").removeClass("fa-solid");
-        $("#iconLove").addClass("fa-regular");
-    }
+<script src="/js/boards.js">
 </script>
 
 </div>

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.domain.users.UsersDao;
+import site.metacoding.red.handler.ex.MyApiException;
 import site.metacoding.red.web.dto.request.users.JoinDto;
 import site.metacoding.red.web.dto.request.users.LoginDto;
 import site.metacoding.red.web.dto.request.users.UpdateDto;
@@ -28,8 +29,8 @@ public class UsersService {
 		Users userInfo = new Users();
 		userInfo.setJoin(joinDto);
 		if(유저네임중복확인(userInfo.getUsername())){
-		System.out.println("회원명 중복 발생");
-		return;}
+		throw new MyApiException("회원명 중복 발생");
+		}
 		// 2. entity로 DB 수행
 		usersDao.insert(userInfo);
 	}
