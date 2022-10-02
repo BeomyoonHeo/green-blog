@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
 	implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.65'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
@@ -29,6 +31,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.7.3'
+	implementation group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
 	
 }
 
